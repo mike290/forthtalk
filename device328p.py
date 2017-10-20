@@ -1,6 +1,6 @@
-# Generated Automatically
-
-# Partname ATmega328P
+# Published as part of the Amforth project
+# Added PIN masks
+# Register names and values for AVR ATmega328P device
 
 MCUREGS = {
 # Interrupt Vectors
