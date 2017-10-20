@@ -13,7 +13,7 @@ Brief list of commands:
          "&comp" Compiles a list of required files and sends them to the Forth system  
          "&file" Analyses a file for words that need other files to be uploaded  
          "&defs" Searches the pathList for files that have definitions  
-         "&path" # Adds a path to the pathList  
+         "&path" Adds a path to the pathList  
          "&warm" Initiates a warm start. Same as sending 'warm' directly to the Forth system  
          "&empty" Sends 'empty' to the Forth system and removes user defined words from definedWords  
          '&list' Shorthand for '&words list'  
