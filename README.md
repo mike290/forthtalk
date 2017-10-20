@@ -7,20 +7,20 @@ Primarily developed to work with flashforth (Mikael Nordman) but some features s
 WARNING: Under development and not fully tested. Not all exceptions are captured so may crash unexpectedly.
 
 Brief list of commands:
-         "&send" Uploads a file to the Forth system
-         "&include" Same as &send
-         "&require" Same as &send
-         "&comp" Compiles a list of required files and sends them to the Forth system
-         "&file" Analyses a file for words that need other files to be uploaded
-         "&defs" Searches the pathList for files that have definitions
-         "&path" # Adds a path to the pathList
-         "&warm" Initiates a warm start. Same as sending 'warm' directly to the Forth system
-         "&empty" Sends 'empty' to the Forth system and removes user defined words from definedWords
-         '&list' Shorthand for '&words list'
-         "&words" Default is to send 'words' to the Forth system and save these in definedWords
-         "&find" Find a word or words in the definedWords list
-         "&last" Copies of last lines received from the Forth system
-         "&stats" Prints out free memory statistics after interrogating the Forth system
+         "&send" Uploads a file to the Forth system  
+         "&include" Same as &send  
+         "&require" Same as &send  
+         "&comp" Compiles a list of required files and sends them to the Forth system  
+         "&file" Analyses a file for words that need other files to be uploaded  
+         "&defs" Searches the pathList for files that have definitions  
+         "&path" # Adds a path to the pathList  
+         "&warm" Initiates a warm start. Same as sending 'warm' directly to the Forth system  
+         "&empty" Sends 'empty' to the Forth system and removes user defined words from definedWords  
+         '&list' Shorthand for '&words list'  
+         "&words" Default is to send 'words' to the Forth system and save these in definedWords  
+         "&find" Find a word or words in the definedWords list  
+         "&last" Copies of last lines received from the Forth system  
+         "&stats" Prints out free memory statistics after interrogating the Forth system  
 
 Configuration of the serial port and speed is currently made by modifying the forthtalk.py file.
 The program looks for a file called config.ftk in the current working directory and can load any intial forthtalk commands from there as it starts up, and/or send Forth code to the Forth system. A sample config.ftk file is provided.
