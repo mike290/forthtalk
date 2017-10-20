@@ -6,6 +6,22 @@ Primarily developed to work with flashforth (Mikael Nordman) but some features s
 
 WARNING: Under development and not fully tested. Not all exceptions are captured so may crash unexpectedly.
 
+Brief list of commands:
+         "&send" Uploads a file to the Forth system
+         "&include" Same as &send
+         "&require" Same as &send
+         "&comp" Compiles a list of required files and sends them to the Forth system
+         "&file" Analyses a file for words that need other files to be uploaded
+         "&defs" Searches the pathList for files that have definitions
+         "&path" # Adds a path to the pathList
+         "&warm" Initiates a warm start. Same as sending 'warm' directly to the Forth system
+         "&empty" Sends 'empty' to the Forth system and removes user defined words from definedWords
+         '&list' Shorthand for '&words list'
+         "&words" Default is to send 'words' to the Forth system and save these in definedWords
+         "&find" Find a word or words in the definedWords list
+         "&last" Copies of last lines received from the Forth system
+         "&stats" Prints out free memory statistics after interrogating the Forth system
+
 Configuration of the serial port and speed is currently made by modifying the forthtalk.py file.
 The program looks for a file called config.ftk in the current working directory and can load any intial forthtalk commands from there as it starts up, and/or send Forth code to the Forth system. A sample config.ftk file is provided.
 The preferred extension for Forth files is '.frt' which is appended to file requests if no extension is specified.
@@ -25,7 +41,7 @@ The command list is table driven and can be easily extended or modified.
 Commands:
 &send filename (synonyms: &include, &require) Sends the specified file to the Forth system. If an extension is specified it will be used, but if no extension is specified '.frt' will be appended to the filename. If a path is specified then the path is used. If no path is specified then the file will be searched for in the current working directory and then in the paths list (see &path). The first matching file found is sent. Paths are searched in the order they are added to the path list.
 
-Each line of the file is processed for '&' commands which are executed; surplus whitespace & comments which are stripped; register names (see device328p.py) which are substituted by literals, and upper case hex literals which are converted to lower case. 
+Each line of the file is processed for '&' commands which are executed; surplus whitespace & comments which are stripped; register names (see device328p.py) which are substituted by literals, and upper case hex literals which are converted to lower case.
 
 &path [pathname]  Adds a path to the path list. No check is made on whether this is a valid path. If no path is provided it prints the current path list.
 
@@ -46,7 +62,7 @@ Free flash :  21643 bytes
 
 &defs   Searches the paths in the path list (see &path) for files with a '.frt' extension. It then analyses the files for forth code which defines new words. This is assumed to be words following a word which terminates in a colon. e.g. ':', 'portpin:', 'as:', etc. The new words are stored in a dictionary (wordFiles) with the name of the file they were found in. It then prints out a list of the words found.
 
-&file filename  Analyses a file and tries to determine if all the words used to define a new word are either in the definedWords list or the wordFiles list. If all the required words are already defined then the 'compileFiles' list will only contain the specified filename. If however, some of the words are not currently defined but found in the wordFiles list, the correcponding files are added to the compileFiles list which are recusively searched for other undefined words. The compileFiles list is then printed. Nothing is sent to the Forth system. E.g.
+&file filename  Analyses a file and tries to determine if all the words used to define a new word are either in the definedWords list or the wordFiles list. If all the required words are already defined then the 'compileFiles' list will only contain the specified filename. If however, some of the words are not currently defined but found in the wordFiles list, the correcponding files are added to the 'compileFiles' list which are recusively searched for other undefined words. The compileFiles list is then printed. Nothing is sent to the Forth system. E.g.
 &file star-slash
 --- Analysing file .../Forth/forthwords/star-slash.frt ---
 --- Analysing file .../Forth/forthwords/star-slash-mod.frt ---
