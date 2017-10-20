@@ -5,8 +5,16 @@ import threading
 from device328p import MCUREGS 
 from time import *
 
-serial_port = serial.Serial("/dev/ttyACM0", "38400", timeout=0.1, writeTimeout=1.0, rtscts=False, xonxoff=False)
- 
+portName = "/dev/ttyACM0"
+portSpeed = "38400"
+
+try:
+   open(portName)
+except (FileNotFoundError):
+   print("Could not open serial port: Ensure Forth system is connected to serial port and port name is correct")
+   exit()
+
+serial_port = serial.Serial(portName, portSpeed, timeout=0.1, writeTimeout=1.0, rtscts=False, xonxoff=False)
  
 class ForthTalk():
  
