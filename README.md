@@ -7,6 +7,7 @@ Primarily developed to work with flashforth (Mikael Nordman) but some features s
 WARNING: Under development and not fully tested. Not all exceptions are captured so may crash unexpectedly.
 
 Brief list of commands:
+
          "&send" Uploads a file to the Forth system  
          "&include" Same as &send  
          "&require" Same as &send  
@@ -21,6 +22,7 @@ Brief list of commands:
          "&find" Find a word or words in the definedWords list  
          "&last" Copies of last lines received from the Forth system  
          "&stats" Prints out free memory statistics after interrogating the Forth system  
+         "##" Exits the program
 
 Configuration of the serial port and speed is currently made by modifying the forthtalk.py file.
 The program looks for a file called config.ftk in the current working directory and can load any intial forthtalk commands from there as it starts up, and/or send Forth code to the Forth system. A sample config.ftk file is provided.
