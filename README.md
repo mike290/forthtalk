@@ -22,7 +22,7 @@ Brief list of commands:
          "&find" Find a word or words in the definedWords list  
          "&last" Copies of last lines received from the Forth system  
          "&stats" Prints out free memory statistics after interrogating the Forth system  
-         "##" Exits the program
+         "##" Exits the program (Keyboard command only)
 
 Configuration of the serial port and speed is currently made by modifying the forthtalk.py file.
 The program looks for a file called config.ftk in the current working directory and can load any intial forthtalk commands from there as it starts up, and/or send Forth code to the Forth system. A sample config.ftk file is provided.
