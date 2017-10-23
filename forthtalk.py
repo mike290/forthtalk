@@ -21,19 +21,19 @@ class ForthTalk():
    def __init__(self):
       self.exit = False # Exit the program if True
       self.displayOutput = False # Display received data to terminal if True
-      self.command_args = "" # Last '&' command argument(s), if any
+      self.command_args = "" # Last '#' command argument(s), if any
       self.pathList = [] # List of paths to be searched for files
       self.lastLines = []   # FIFO buffer of recently received lines from Forth system
       self.maxLastLines = 10 # Maxmimum lines retained in lastLines FIFO buffer
       self.newlineCount = 0 # Used to rate limit data sending
       # Words in the base system that compile new words that don't end with ':'
       self.compileWords = ["constant","variable","value","2constant","2variable"]
-      self.definedWords = [] # Loaded on startup. Also command '&words' populates this list
+      self.definedWords = [] # Loaded on startup. Also command '#words' populates this list
       self.newDefinedWords = [] # Words defined within a file being analysed
       self.unknownWords = [] # Populated with undefined words when analysing files
       self.compileFiles = [] # List of files to be compiled, i.e. sent to the Forth system
       self.wordFiles = {}
-      self.configFile = "config.ftk" # Optional file of startup commands (typ. &path commands)
+      self.configFile = "config.ftk" # Optional file of startup commands (typ. #path commands)
 
       # Start the keyboard/serial thread and the serial receive thread
       self.serial_receive() # Start the serial receive/terminal output thread
@@ -48,7 +48,7 @@ class ForthTalk():
 
    def _keybd_serial_send(self):
       ''' Thread for receiving input from keyboard and either forward to Forth system serial port
-         or, if there is a command preceded by '&', executing the command.
+         or, if there is a command preceded by '#', executing the command.
          '##' terminates the program.
       '''
       print("Keyboard thread started")
@@ -91,7 +91,7 @@ class ForthTalk():
       ''' Thread to receive serial data from Forth system, maintaining a list of up to
          'self.maxLastLines' (Default=10) last lines received. Received lines are
          available in 'self.lastLines'. Useful for debugging, but also used
-         by commands such as '&words'. Can be displayed using command '&last'
+         by commands such as '#words'. Can be displayed using command '#last'
       '''
       print("Receive thread started")
       recvBuffer = ""
@@ -154,21 +154,21 @@ class ForthTalk():
       '''
 
       commandList = {
-         "&send":self.send_file, # Uploads a file to the Forth system
-         "&include":self.send_file, # Same as &send
-         "&require":self.send_file, # Same as &send
-         "&comp":self.compile_file, # Compiles a list of required files and sends them to the Forth system
-         "&file":self.analyse_file, # Analyses a file for words that need other files to be uploaded
-         "&defs":self.find_definitions, # Searches the pathList for files that have definitions
-         "&path":self.add_path, # Adds a path to the pathList
-         "&warm":self.warm_start, # Initiates a warm start. Same as sending 'warm' directly to the Forth system
-         "&empty":self.empty, # Sends 'empty' to the Forth system and removes user defined words from definedWords
-         '&list':self.list_words, # Shorthand for '&words list'
-         "&words":self.defined_words, # Default is to send 'words' to the Forth system and save these in definedWords
-         "&find":self.find_words, # Find a word or words in the definedWords list
-         "&hex":self.hex_convert, # Search a file for hex literals prefix by $ and convert to lower case if necessary
-         "&last":self.last_lines, # Copies of last lines received from the Forth system
-         "&stats":self.memory_stats # Prints out free memory statistics after interrogating the Forth system
+         "#send":self.send_file, # Uploads a file to the Forth system
+         "#include":self.send_file, # Same as #send
+         "#require":self.send_file, # Same as #send
+         "#comp":self.compile_file, # Compiles a list of required files and sends them to the Forth system
+         "#file":self.analyse_file, # Analyses a file for words that need other files to be uploaded
+         "#defs":self.find_definitions, # Searches the pathList for files that have definitions
+         "#path":self.add_path, # Adds a path to the pathList
+         "#warm":self.warm_start, # Initiates a warm start. Same as sending 'warm' directly to the Forth system
+         "#empty":self.empty, # Sends 'empty' to the Forth system and removes user defined words from definedWords
+         '#list':self.list_words, # Shorthand for '#words list'
+         "#words":self.defined_words, # Default is to send 'words' to the Forth system and save these in definedWords
+         "#find":self.find_words, # Find a word or words in the definedWords list
+         "#hex":self.hex_convert, # Search a file for hex literals prefix by $ and convert to lower case if necessary
+         "#last":self.last_lines, # Copies of last lines received from the Forth system
+         "#stats":self.memory_stats # Prints out free memory statistics after interrogating the Forth system
          }
 
       if len(text.split(" ",1)) > 1 :       # Check for argument(s)
@@ -184,7 +184,7 @@ class ForthTalk():
       self.command_args = "" # Clear the command argument
       self.send_data("") # Get a new prompt - send_data sends "\n"
 
-# =========================== & Command Methods ===========================
+# =========================== # Command Methods ===========================
 
    def send_file(self):
       ''' Uploads the given file to the Forth system '''
@@ -203,7 +203,7 @@ class ForthTalk():
       if pathfile:
          self.analyse_file(pathfile)
          for file in reversed(self.compileFiles):
-            self.run_command("&send " + file)
+            self.run_command("#send " + file)
       else:
          return ("File not found: " + self.command_args)
 
@@ -230,12 +230,15 @@ class ForthTalk():
       if os.path.dirname(filename) or os.path.isfile(filename): 
          return filename
       else:
-         for path in self.pathList: # Work through the pathList
-            pathfile = os.path.join(path,filename) # Creating a path+filename
-            if os.path.isfile(pathfile): # If it exists in this path, stop searching
-               break
-            else:
-               pathfile = False
+         if self.pathList:
+            for path in self.pathList: # Work through the pathList
+               pathfile = os.path.join(path,filename) # Creating a path+filename
+               if os.path.isfile(pathfile): # If it exists in this path, stop searching
+                  break
+               else:
+                  pathfile = False
+         else:
+            pathfile = False
          return pathfile
 
    def analyse_file(self,pathfile=None):
@@ -529,7 +532,7 @@ class LineProcessor(ForthTalk):
    ''' Provides methods for processing an input line whether received
       from the keyboard in interactive mode, or from a file being send to
       the Forth system. Initialisation includes identifying command lines with a
-      '&' at the beginning of the line or immediately after a comment: '\ &',
+      '#' at the beginning of the line or immediately after a comment: '\ #',
       or lines which consist only of white space. Methods include stripping
       comments and substituting registers with literals from the device file.
      '''
@@ -540,12 +543,12 @@ class LineProcessor(ForthTalk):
          self.text = ""
          return
          # Commands start at the beginning of the line, but can be in a comment line
-         # preceded by '\ '. e.g. |&words  or |\ &words but not |\  &words
-         # '&' characters anywhere else in the line are ignored
-      if (line[:1] == "&" or line[:3] == "\\ &"):  
+         # preceded by '\ '. e.g. |#words  or |\ #words but not |\  #words
+         # '#' characters anywhere else in the line are ignored
+      if (line[:1] == "#" or line[:3] == "\\ #"):  
          self.is_command = True
-         if line[:3] == "\\ &":
-            line = line[2:]  # Drop the '\ ' to leave a line starting with '&'
+         if line[:3] == "\\ #":
+            line = line[2:]  # Drop the '\ ' to leave a line starting with '#'
       self.text = line.rstrip("\n\r") # Strip NL and CR from end of line
 
    def strip_registers(self):
