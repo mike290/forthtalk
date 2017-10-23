@@ -1,21 +1,21 @@
 \ Config file for forthTalk
 \ =======================================================
-\ Can contain any forthTalk commands beginning with '&'
+\ Can contain any forthTalk commands beginning with '#'
 \ at the beginning of the line or following '\' + one space.
 
-\ Note: if writing a comment make sure a '&' is not in the third 
+\ Note: if writing a comment make sure a '#' is not in the third 
 \ position on a line or it will be interpreted as a command.
 
 \ Config file commands can include uploading other files or sending
 \ Forth code to the Forth system.
 
 \ Load search paths:
-&path /home/mike/Documents/Forth/source
-&path /home/mike/Documents/Forth/forthwords
+#path /home/mike/Documents/Forth/source
+#path /home/mike/Documents/Forth/forthwords
 
 \ Load words which are defined in files in the search path
-&defs
+#defs
 
 \ Load the current list of words which are already defined on the Forth system
-&words
+#words
 
