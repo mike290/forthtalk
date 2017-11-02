@@ -676,11 +676,12 @@ class LineProcessor(ForthTalk):
       for word in splitLine:
          newWord = word
          if len(word) > 1 and word.endswith('.') : # Hex may have a trailing '.'
-            newWord = word[:-1]
+            newWord = newWord[:-1]
+         if len(word) > 1 and word.startswith('$') : # Hex literals may start with '$'
+            newWord = newWord[1:]
          # If valid hex then convert to lower case
          if newWord.strip('0123456789ABCDEF') == "" :
-            newWord = word.lower()
-            newLine = newLine + newWord + " "
+            newLine = newLine + word.lower() + " "
          else:  # Else keep the original word
             newLine = newLine + word + " "
 

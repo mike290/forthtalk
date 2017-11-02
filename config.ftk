@@ -10,8 +10,8 @@
 \ Forth code to the Forth system.
 
 \ Load search paths:
-#path /home/mike/Documents/Forth/source
-#path /home/mike/Documents/Forth/forthwords
+#path /home/mike/Documents/Tech/Forth/flashforth/source
+#path /home/mike/Documents/Tech/Forth/forthwords
 
 \ Load words which are defined in files in the search path
 #defs

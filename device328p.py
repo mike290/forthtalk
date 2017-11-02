@@ -1,8 +1,19 @@
 # Published as part of the Amforth project
 # Added PIN masks
+# Added user application specific literals.
 # Register names and values for AVR ATmega328P device
 
 MCUREGS = {
+# User application specific literals. It is important to make sure
+# these are unique as Python will not report duplicates!
+# Pin references are used with a port register, e.g. PORTB
+
+    'OWPIN' : '#1' , # Pin used for one wire communications
+    'SPI_SS' : '#2' , # Pin used for SPI device select
+    'SPI_MOSI' : '#3' , # Pin used for SPI Master Out Slave Out
+    'SPI_MISO' : '#4' , # Pin used for SPI Master In Slave In
+    'SPI_CLK' : '#5' , # Pin used for SPI clock
+
 # Interrupt Vectors
 	'INT0Addr' : '#2', # External Interrupt Request 0
 	'INT1Addr' : '#4', # External Interrupt Request 1
