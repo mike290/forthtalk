@@ -160,6 +160,7 @@ class ForthTalk():
          "#comp":self.compile_file, # Compiles a list of required files and sends them to the Forth system
          "#file":self.analyse_file, # Analyses a file for words that need other files to be uploaded
          "#defs":self.find_definitions, # Searches the pathList for files that have definitions
+         "#lits":self.add_lits, # Add literal definitions to MCUREGS. Format: litName:litDef e.g. SPI_MOSI:$3
          "#path":self.add_path, # Adds a path to the pathList
          "#warm":self.warm_start, # Initiates a warm start. Same as sending 'warm' directly to the Forth system
          "#empty":self.empty, # Sends 'empty' to the Forth system and removes user defined words from definedWords
@@ -374,6 +375,21 @@ class ForthTalk():
                                  print("No word after defining word!!!")
          except IOError as e:
             sys.stderr.write('--- ERROR opening file {}: {} ---\n'.format(filename, e))
+
+   def add_lits(self):
+      if self.command_args == "":
+         print("No literal definitions provided!")
+         return
+      litDefs = self.command_args.split()
+      for lit in litDefs:
+         if len(lit.split(":")) != 2:
+            print("Incorrectly formed literal definition!",lit)
+         else:
+            litName = lit.split(":")[0]
+            litValue = lit.split(":")[1]
+            if litName in MCUREGS and litValue != MCUREGS[litName]:
+               print("Literal",litName,"value",MCUREGS[litName],"overwritten with:",litValue)
+            MCUREGS[litName] = litValue
 
    def add_path(self):
       if self.command_args == "" and self.displayOutput :  # No arguments and displayOuput = True
